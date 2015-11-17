@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   get 'broadcast/share', controller: 'broadcast', action: 'share', as: :share_broadcast
   get 'broadcast/watch', controller: 'broadcast', action: 'watch', as: :watch_broadcast
+  post 'broadcasts/create', controller: 'broadcast', action: 'create', as: :create_broadcast
+  post 'broadcasts/:id/update', controller: 'broadcast', action: 'update', as: :update_broadcast
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

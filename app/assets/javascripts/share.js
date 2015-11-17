@@ -1,6 +1,6 @@
 $(document).ready(function() {
   var server = 'wss://' + window.location.hostname + ':8989';
-  var janusSession = null, started = false, role = 'publisher';
+  var janusSession = null, started = false, role = 'publisher', broadcast = null;
 
   Janus.init({
     debug: 'all',
@@ -21,7 +21,9 @@ $(document).ready(function() {
             window.location.reload();
           },
           destroyed: function() {
-            window.location.reload();
+            $.post(broadcast.update_url, { 'active': false }, function() {
+              window.location.reload();
+            });
           }
         })
       })
@@ -37,21 +39,32 @@ $(document).ready(function() {
         handle = pluginHandle
         Janus.log('Plugin attached! (' + pluginHandle.getPlugin() + ', id=' + pluginHandle.getId() + ')');
 
-        var create = { 'request': 'create', 'description': 'desc', 'bitrate': 2048 * 1024, 'publishers': 2, 'record': false };
-        handle.send({
-          message: create,
-          success: function(result) {
-            var event = result["videoroom"];
-            if (event != undefined && event != null) {
-              var room = result['room'];
+        $.post($('#pre_share').data('new-url'), function(data) {
+          broadcast = data;
 
-              var url = $('#watch_link').data('href') + '#' + room;
-              $('#watch_link').attr('href', url).text(url);
-              
-              createScreencastHandle(room);
-              createWebcamHandle(room);
-            }
+          var create = { 'request': 'create', 'description': 'desc', 'bitrate': 2048 * 1024, 'publishers': 2, 'record': false };
+
+          if ($('#record_broadcast')[0].checked === true) {
+            create.record = true;
+            create.rec_dir = broadcast.path;
           }
+
+          handle.send({
+            message: create,
+            success: function(result) {
+              var event = result["videoroom"];
+              if (event != undefined && event != null) {
+                var room = result['room'];
+                var url = $('#watch_link').data('href') + '#' + room;
+                $('#watch_link').attr('href', url).text(url);
+
+                $.post(broadcast.update_url, { 'room': room, 'recorded': create.record });
+                
+                createScreencastHandle(room);
+                createWebcamHandle(room);
+              }
+            }
+          });
         });
       }
     });
@@ -83,8 +96,7 @@ $(document).ready(function() {
       plugin: 'janus.plugin.videoroom',
       success: function(pluginHandle) {
         handle = pluginHandle
-        Janus.log('Plugin attached! (' + pluginHandle.getPlugin() + ', id=' + pluginHandle.getId() + ')');
-
+        Janus.log('Plugin attached! (' + handle.getPlugin() + ', id=' + handle.getId() + ')');
         handle.send({ 'message': { 'request': 'join', 'room': room, 'ptype': 'publisher', 'display': 'screen' } });
       },
       onmessage: function(msg, jsep) {
@@ -96,6 +108,7 @@ $(document).ready(function() {
         if(event != undefined && event != null) {
           if(event === 'joined') {
             var id = msg["id"];
+            $.post(broadcast.update_url, { 'screen_handle': id });
             Janus.log('Successfully joined room ' + msg['room'] + ' with ID ' + id);
 
             handle.createOffer({
@@ -150,7 +163,9 @@ $(document).ready(function() {
       plugin: 'janus.plugin.videoroom',
       success: function(pluginHandle) {
         handle = pluginHandle
-        Janus.log('Plugin attached! (' + pluginHandle.getPlugin() + ', id=' + pluginHandle.getId() + ')');
+        console.log('============================================================================================');
+        console.log(handle);
+        Janus.log('Plugin attached! (' + handle.getPlugin() + ', id=' + handle.getId() + ')');
 
         handle.send({ 'message': { 'request': 'join', 'room': room, 'ptype': 'publisher', 'display': 'webcam' } });
       },
@@ -163,6 +178,7 @@ $(document).ready(function() {
         if(event != undefined && event != null) {
           if(event === 'joined') {
             var id = msg["id"];
+            $.post(broadcast.update_url, { 'webcam_handle': id });
             Janus.log('Successfully joined room ' + msg['room'] + ' with ID ' + id);
 
             handle.createOffer({

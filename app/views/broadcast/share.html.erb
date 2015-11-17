@@ -1,6 +1,6 @@
 <%= javascript_include_tag 'share' %>
 
-<div id="pre_share">
+<div id="pre_share" data-new-url="<%= create_broadcast_url(format: :json) %>">
   <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="record_broadcast">
     <input type="checkbox" id="record_broadcast" class="mdl-checkbox__input">
     <span class="mdl-checkbox__label">Record Broadcast?</span>
