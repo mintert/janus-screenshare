@@ -1,0 +1,18 @@
+<%= javascript_include_tag 'share' %>
+
+<div id="pre_share">
+  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="record_broadcast">
+    <input type="checkbox" id="record_broadcast" class="mdl-checkbox__input">
+    <span class="mdl-checkbox__label">Record Broadcast?</span>
+  </label>
+
+  <button id="start_broadcast" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+    Start Broadcasting
+  </button>
+</div>
+
+<div id="post_share" style="display:none;">
+  <a id="watch_link" data-href="<%= watch_broadcast_url %>" href="#"></a>
+
+  <div id="screenpreview"></div>
+</div>

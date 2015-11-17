@@ -1,0 +1,89 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require video-js.min
+ *= require_self
+ */
+
+@import "material";
+
+#screenpreview { position: relative; }
+#screenstream { position: relative; }
+
+#webcamvideo {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// MDL demo tpl
+
+.demo-ribbon {
+  width: 100%;
+  height: 40vh;
+  background-color: #3F51B5;
+  flex-shrink: 0;
+}
+
+.demo-main {
+  margin-top: -35vh;
+  flex-shrink: 0;
+}
+
+.demo-header .mdl-layout__header-row {
+  padding-left: 40px;
+}
+
+.demo-container {
+  max-width: 1600px;
+  width: calc(100% - 16px);
+  margin: 0 auto;
+}
+
+.demo-content {
+  border-radius: 2px;
+  padding: 56px 56px;
+  margin-bottom: 80px;
+}
+
+.demo-layout.is-small-screen .demo-content {
+  padding: 40px 28px;
+}
+
+.demo-content h3 {
+  margin-top: 48px;
+}
+
+.demo-footer {
+  padding-left: 40px;
+}
+
+.demo-footer .mdl-mini-footer--link-list a {
+  font-size: 13px;
+}
