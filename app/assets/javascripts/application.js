@@ -16,3 +16,4 @@
 //= require adapter
 //= require janus
 //= require video.min
+//= require draggabilly.pkgd.min

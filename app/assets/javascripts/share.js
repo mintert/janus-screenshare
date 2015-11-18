@@ -136,13 +136,8 @@ $(document).ready(function() {
         }
 
         $('#screenpreview').append('<video class="video-js" id="screenvideo" controls autoplay muted="muted"/>');
-        $("#screenvideo").bind("playing", function () {
-          if (videojs.players['screenvideo'] === undefined || videojs.players['screenvideo'] === null) {
-            videojs('screenvideo', { "controls": true, "fluid": true });
-          }
-        });
-
         attachMediaStream($('#screenvideo')[0], stream);
+        videojs('screenvideo', { "controls": true, "fluid": true });
       }
     });
 
@@ -235,12 +230,15 @@ $(document).ready(function() {
         Janus.debug(' ::: Got a local stream :::');
         Janus.debug(JSON.stringify(stream));
 
+        if (videojs.players['webcamvideo'] !== undefined && videojs.players['webcamvideo'] !== null) {
+          videojs('webcamvideo').dispose();
+        }
+
         $('#screenpreview').append('<video class="video-js" id="webcamvideo" controls autoplay muted="muted"/>');
-        $("#webcamvideo").bind("playing", function () {
-          if (videojs.players['webcamvideo'] === undefined)
-            videojs('webcamvideo', { "controls": false, "width": 320, "height": 240 });
-        });
         attachMediaStream($('#webcamvideo')[0], stream);
+        videojs('webcamvideo', { "controls": false, "width": 320, "height": 240 }, function() {
+          $('#webcamvideo').draggabilly({ containment: '#screenpreview'});
+        });
       }
     });
 

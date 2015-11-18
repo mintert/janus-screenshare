@@ -169,27 +169,20 @@ $(document).ready(function() {
           }
 
           $('#screenstream').append('<video class="video-js hide" id="screenvideo" width="100%" height="100%" autoplay muted="muted"/>');
-
-          $("#screenvideo").bind("playing", function () {
-            if (videojs.players['screenvideo'] === undefined || videojs.players['screenvideo'] === null) {
-              videojs('screenvideo', { "controls": true, "fluid": true });
-            }
-          });
-
           attachMediaStream($('#screenvideo')[0], stream);
+          videojs('screenvideo', { "controls": true, "fluid": true });
         }
 
         if (display == "webcam") {
-          if($('#webcamvideo').length === 0) {
-            $('#screenstream').append('<video class="video-js hide" id="webcamvideo" width="640" height="360" autoplay muted="muted"/>');
+          if (videojs.players['webcamvideo'] !== undefined && videojs.players['webcamvideo'] !== null) {
+            videojs('webcamvideo').dispose();
           }
-          // Show the video, hide the spinner and show the resolution when we get a playing event
-          $("#webcamvideo").bind("playing", function () {
-            if (videojs.players['webcamvideo'] === undefined)
-              videojs('webcamvideo', { "controls": false, "width": 320, "height": 240 });
-          });
 
+          $('#screenstream').append('<video class="video-js hide" id="webcamvideo" width="640" height="360" autoplay muted="muted"/>');
           attachMediaStream($('#webcamvideo')[0], stream);
+          videojs('webcamvideo', { "controls": false, "width": 320, "height": 240 }, function() {
+            $('#webcamvideo').draggabilly({ containment: '#screenstream'});
+          });
         }
 
         updateBitrate = setInterval(function() {
