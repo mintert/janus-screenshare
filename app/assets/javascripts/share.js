@@ -188,8 +188,6 @@ $(document).ready(function() {
       plugin: 'janus.plugin.videoroom',
       success: function(pluginHandle) {
         handle = pluginHandle
-        console.log('============================================================================================');
-        console.log(handle);
         Janus.log('Plugin attached! (' + handle.getPlugin() + ', id=' + handle.getId() + ')');
 
         handle.send({ 'message': { 'request': 'join', 'room': room, 'ptype': 'publisher', 'display': 'webcam' } });

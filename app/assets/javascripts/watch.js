@@ -105,6 +105,7 @@ $(document).ready(function() {
   function newRemoteFeed(id, display) {
   // A new feed has been published, create a new plugin handle and attach to it as a listener
   var handle = null;
+  var updateBitrate = null;
 
     janusSession.attach({
       plugin: 'janus.plugin.videoroom',
@@ -187,12 +188,17 @@ $(document).ready(function() {
             if (videojs.players['webcamvideo'] === undefined)
               videojs('webcamvideo', { "controls": false, "width": 320, "height": 240 });
           });
+
           attachMediaStream($('#webcamvideo')[0], stream);
         }
+
+        updateBitrate = setInterval(function() {
+          $('#bitrate_display .' + display).text(handle.getBitrate());
+        }, 1000);
       },
       oncleanup: function() {
         Janus.log(" ::: Got a cleanup notification (remote feed " + id + ") :::");
-        $()
+        clearInterval(updateBitrate);
       }
     });
   }

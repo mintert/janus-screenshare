@@ -37,6 +37,13 @@
   > span { padding-right: 20px; }
 }
 
+#bitrate_display {
+  position: absolute;
+  bottom: -40px;
+
+  > span { padding-right: 20px; }
+}
+
 #bitrate_selector_screen, #bitrate_selector_webcam {
   display: inline-block;
   width: 200px;
