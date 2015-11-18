@@ -16,8 +16,7 @@
 
 @import "material";
 
-#screenpreview { position: relative; }
-#screenstream { position: relative; }
+#screenpreview, #screenstream, #post_share { position: relative; }
 
 #webcamvideo {
   position: absolute;
@@ -26,6 +25,28 @@
   z-index: 1;
 }
 
+.recent-broadcasts-table td {
+  vertical-align: middle;
+  padding-bottom: 12px;
+}
+
+#bitrate_selector {
+  position: absolute;
+  top: -40px;
+
+  > span { padding-right: 20px; }
+}
+
+#bitrate_selector_screen, #bitrate_selector_webcam {
+  display: inline-block;
+  width: 200px;
+}
+
+#post_share_actions {
+  position: absolute;
+  top: -40px;
+  right: 0;
+}
 
 
 

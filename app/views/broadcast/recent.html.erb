@@ -1,0 +1,26 @@
+<h3>Recent Broadcasts</h3>
+<table class="recent-broadcasts-table mdl-data-table mdl-js-data-table mdl-shadow--2dp" width="100%">
+  <thead>
+    <tr>
+      <th width="1">&nbsp;</th>
+      <th width="1">No.</th>
+      <th>Date</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @broadcasts.each do |broadcast| %>
+      <tr>
+        <td><%= image_tag broadcast.thumbnail.url(:thumb) %></td>
+        <td># <%= broadcast.id %></td>
+        <td><%= l broadcast.created_at, format: :short %></td>
+        <td>
+          <%= link_to show_broadcast_path(broadcast), class: 'mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored' do %>
+            <i class="material-icons">launch</i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

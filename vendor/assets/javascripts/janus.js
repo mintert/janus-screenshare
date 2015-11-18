@@ -1174,8 +1174,8 @@ function Janus(gatewayCallbacks) {
 			var videoSupport = isVideoSendEnabled(media);
 			if(videoSupport === true && media != undefined && media != null) {
 				if(media.video && media.video != 'screen') {
-					var width = 1920;
-					var height = 1080, maxHeight = 1080;
+					var width = 1280;
+					var height = 720, maxHeight = 720;
 					if(media.video === 'lowres') {
 						// Small resolution, 4:3
 						height = 240;

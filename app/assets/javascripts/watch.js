@@ -65,8 +65,15 @@ $(document).ready(function() {
               if (list.length === 0) {
                 $('#no_stream').show();
               }
-
-              handle.send({"message": {"request": "configure", "bitrate": 2048 * 1024}});
+            }
+          } else if (msg["publishers"] !== undefined && msg["publishers"] !== null) {
+            // in this case: new screencast handle
+            var list = msg["publishers"];
+            for(var f in list) {
+              var id = list[f]["id"];
+              var display = list[f]["display"];
+              Janus.debug("  >> [" + id + "] " + display);
+              newRemoteFeed(id, display);
             }
           } else if(msg["leaving"] !== undefined && msg["leaving"] !== null) {
             // One of the publishers has gone away?
@@ -125,6 +132,7 @@ $(document).ready(function() {
           if(event === 'attached') {
             // Subscriber created and attached
             Janus.log("Successfully attached to feed " + id + " (" + display + ") in room " + msg["room"]);
+            handle.send({ 'message': { 'request': 'configure' }});
           } else {
             // What has just happened?
           }
@@ -155,14 +163,18 @@ $(document).ready(function() {
       },
       onremotestream: function(stream) {
         if (display == "screen") {
-          if($('#screenvideo').length === 0) {
-            $('#screenstream').append('<video class="video-js hide" id="screenvideo" width="100%" height="100%" autoplay muted="muted"/>');
+          if (videojs.players['screenvideo'] !== undefined && videojs.players['screenvideo'] !== null) {
+            videojs('screenvideo').dispose();
           }
-          // Show the video, hide the spinner and show the resolution when we get a playing event
+
+          $('#screenstream').append('<video class="video-js hide" id="screenvideo" width="100%" height="100%" autoplay muted="muted"/>');
+
           $("#screenvideo").bind("playing", function () {
-            if (videojs.players['screenvideo'] === undefined)
+            if (videojs.players['screenvideo'] === undefined || videojs.players['screenvideo'] === null) {
               videojs('screenvideo', { "controls": true, "fluid": true });
+            }
           });
+
           attachMediaStream($('#screenvideo')[0], stream);
         }
 
@@ -180,10 +192,7 @@ $(document).ready(function() {
       },
       oncleanup: function() {
         Janus.log(" ::: Got a cleanup notification (remote feed " + id + ") :::");
-        $('#waitingvideo').remove();
-        if(spinner !== null && spinner !== undefined)
-          spinner.stop();
-        spinner = null;
+        $()
       }
     });
   }

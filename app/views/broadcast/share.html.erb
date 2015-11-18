@@ -12,7 +12,26 @@
 </div>
 
 <div id="post_share" style="display:none;">
+  <div id="bitrate_selector">
+    <span>Screen Quality</span>
+    <select id="bitrate_selector_screen" class="mdl-textfield__input">
+      <option value="1200">Low</option>
+      <option value="1800">Medium</option>
+      <option value="2400" selected>High</option>
+    </select>
+
+    <span>Webcam Quality</span>
+    <select id="bitrate_selector_webcam" class="mdl-textfield__input">
+      <option value="16">Low</option>
+      <option value="64">Medium</option>
+      <option value="300" selected>High</option>
+    </select>
+  </div>
   <a id="watch_link" data-href="<%= watch_broadcast_url %>" href="#"></a>
+  <div id="post_share_actions">
+    <button id="new_screenshare" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Select new Window</button>
+    <a href="/" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-button--accent">Stop</a>
+  </div>
 
   <div id="screenpreview"></div>
 </div>

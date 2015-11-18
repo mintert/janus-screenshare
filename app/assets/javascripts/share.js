@@ -42,7 +42,7 @@ $(document).ready(function() {
         $.post($('#pre_share').data('new-url'), function(data) {
           broadcast = data;
 
-          var create = { 'request': 'create', 'description': 'desc', 'bitrate': 2048 * 1024, 'publishers': 2, 'record': false };
+          var create = { 'request': 'create', 'description': 'desc', 'bitrate': 4096 * 1024, 'publishers': 2, 'record': false };
 
           if ($('#record_broadcast')[0].checked === true) {
             create.record = true;
@@ -110,25 +110,14 @@ $(document).ready(function() {
             var id = msg["id"];
             $.post(broadcast.update_url, { 'screen_handle': id });
             Janus.log('Successfully joined room ' + msg['room'] + ' with ID ' + id);
-
-            handle.createOffer({
-              media: { video: 'screen', audio: false, videoRecv: false},
-              success: function(jsep) {
-                Janus.debug('Got publisher SDP!');
-                Janus.debug(jsep);
-                var publish = { 'request': 'configure', 'audio': true, 'video': true, 'bitrate': 2048 * 1024 };
-                handle.send({'message': publish, 'jsep': jsep});
-              },
-              error: function(error) {
-                Janus.error('WebRTC error:', error);
-                alert(JSON.stringify(error));
-              }
-            });
+            createScreencastOffer()
+          } else if (event === 'event' && msg['unpublished'] != undefined && msg['unpublished'] === 'ok') {
+            // in this case: user selected new window
+            createScreencastOffer();
           } else if(msg['error'] !== undefined && msg['error'] !== null) {
             alert(msg['error']);
           }
         }
-
         if(jsep !== undefined && jsep !== null) {
           Janus.debug("Handling SDP as well...");
           Janus.debug(jsep);
@@ -142,13 +131,49 @@ $(document).ready(function() {
         Janus.debug(' ::: Got a local stream :::');
         Janus.debug(JSON.stringify(stream));
 
+        if (videojs.players['screenvideo'] !== undefined && videojs.players['screenvideo'] !== null) {
+          videojs('screenvideo').dispose();
+        }
+
         $('#screenpreview').append('<video class="video-js" id="screenvideo" controls autoplay muted="muted"/>');
         $("#screenvideo").bind("playing", function () {
-          if (videojs.players['screenvideo'] === undefined)
+          if (videojs.players['screenvideo'] === undefined || videojs.players['screenvideo'] === null) {
             videojs('screenvideo', { "controls": true, "fluid": true });
+          }
         });
+
         attachMediaStream($('#screenvideo')[0], stream);
       }
+    });
+
+    function createScreencastOffer() {
+      handle.createOffer({
+        media: { video: 'screen', audio: false, videoRecv: false},
+        success: function(jsep) {
+          Janus.debug('Got publisher SDP!');
+          Janus.debug(jsep);
+          var publish = { 'request': 'configure', 'audio': true, 'video': true, 'bitrate': $('#bitrate_selector_screen')[0].value * 1024 };
+          handle.send({'message': publish, 'jsep': jsep});
+          $('#new_screenshare').attr('disabled', false);
+        },
+        error: function(error) {
+          Janus.error('WebRTC error:', error);
+          alert(JSON.stringify(error));
+        }
+      });
+    }
+
+    $('#new_screenshare').click(function() {
+      $(this).attr('disabled', true);
+      handle.send({ 'message': { 'request': 'unpublish' } });
+    });
+
+    // attach listener for chaning bitrate
+    $('#bitrate_selector_screen').change(function() {
+      var b = this.value;
+      handle.send({ 'message': { 'request': 'configure', 'bitrate': b * 1024 }, success: function() {
+        console.log(" --- Changed bitrate to " + b + " kbps");
+      }});
     });
   };
 
@@ -186,7 +211,7 @@ $(document).ready(function() {
               success: function(jsep) {
                 Janus.debug('Got publisher SDP!');
                 Janus.debug(jsep);
-                var publish = { "request": "configure", "audio": true, "video": true, "bitrate": 2048 * 1024 };
+                var publish = { "request": "configure", "audio": true, "video": true, "bitrate": $('#bitrate_selector_webcam')[0].value * 1024 };
                 handle.send({'message': publish, 'jsep': jsep});
               },
               error: function(error) {
@@ -219,6 +244,14 @@ $(document).ready(function() {
         });
         attachMediaStream($('#webcamvideo')[0], stream);
       }
+    });
+
+    // attach listener for chaning bitrate
+    $('#bitrate_selector_webcam').change(function() {
+      var b = this.value;
+      handle.send({ 'message': { 'request': 'configure', 'bitrate': b * 1024 }, success: function() {
+        console.log(" --- Changed bitrate to " + b + " kbps");
+      }});
     });
   }
 

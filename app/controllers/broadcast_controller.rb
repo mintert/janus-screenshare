@@ -5,6 +5,10 @@ class BroadcastController < ApplicationController
   def watch
   end
 
+  def show
+    @broadcast = Broadcast.find(params[:id])
+  end
+
   def create
     @broadcast = Broadcast.create
     render json: { id: @broadcast.id, path: @broadcast.path.to_s, update_url: update_broadcast_url(@broadcast) }
@@ -15,6 +19,10 @@ class BroadcastController < ApplicationController
     @broadcast.update(broadcast_params)
 
     render json: nil
+  end
+
+  def recent
+    @broadcasts = Broadcast.where(recorded: true, active: false, processed: true).order(created_at: :desc)
   end
 
 

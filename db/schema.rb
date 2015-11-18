@@ -11,16 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151117112353) do
+ActiveRecord::Schema.define(version: 20151117140841) do
 
   create_table "broadcasts", force: :cascade do |t|
     t.string   "room"
     t.string   "screen_handle"
     t.string   "webcam_handle"
-    t.boolean  "active",        default: true
-    t.boolean  "recorded",      default: false
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.boolean  "active",                 default: true
+    t.boolean  "recorded",               default: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.string   "thumbnail_file_name"
+    t.string   "thumbnail_content_type"
+    t.integer  "thumbnail_file_size"
+    t.datetime "thumbnail_updated_at"
+    t.boolean  "processed",              default: false
   end
 
 end
