@@ -1,14 +1,25 @@
 <%= javascript_include_tag 'share' %>
 
-<div id="pre_share" data-new-url="<%= create_broadcast_url(format: :json) %>">
-  <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="record_broadcast">
-    <input type="checkbox" id="record_broadcast" class="mdl-checkbox__input">
-    <span class="mdl-checkbox__label">Record Broadcast?</span>
-  </label>
+<div id="pre_share" class="mdl-grid" data-new-url="<%= create_broadcast_url(format: :json) %>">
+  <div class="mdl-cell--6-col">
+    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="record_broadcast">
+      <input type="checkbox" id="record_broadcast" class="mdl-checkbox__input">
+      <span class="mdl-checkbox__label">Record Broadcast?</span>
+    </label>
 
-  <button id="start_broadcast" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-    Start Broadcasting
-  </button>
+    <button id="start_broadcast" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+      Start Broadcasting
+    </button>
+  </div>
+  <div class="mdl-cell--6-col">
+    <p>Make sure you got the proper Extension for your Browser installed, in order to be able to share your screen.</p>
+    <h5>Goolge Chrome</h5>
+    <p>Navigate to <code>chrome://extensions</code> and drop the downloaded file in there.</p>
+    <a href="/verstehe_webrtc_screen_capture.crx" class="mdl-button mdl-js-button mdl-button--raised"><i class="material-icons">file_download</i> Download Extension</a>
+    <h5>Mozilla Firefox</h5>
+    <p>Navigate to <code>about:addons</code> and drop the downloaded file in there.</p>
+    <a href="/verstehe_webrtc_screen_capture.xpi" class="mdl-button mdl-js-button mdl-button--raised"><i class="material-icons">file_download</i> Download Extension</a>
+  </div>
 </div>
 
 <div id="post_share" style="display:none;">
